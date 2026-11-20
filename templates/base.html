@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}Table Ordering{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-currency="{{ currency }}" {% block body_attrs %}{% endblock %}>
+  {% block nav %}
+  <nav class="nav no-print">
+    <a href="{{ url_for('main.manager') }}">Floor</a>
+    <a href="{{ url_for('main.kitchen') }}">Kitchen</a>
+    <a href="{{ url_for('main.bar') }}">Bar</a>
+    <a href="{{ url_for('main.menu_admin') }}">Menu</a>
+    <a href="{{ url_for('main.qr_sheet') }}">QR codes</a>
+    <form method="post" action="{{ url_for('main.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link">Log out</button></form>
+  </nav>
+  {% endblock %}
+  <main>
+    {% for m in get_flashed_messages() %}<div class="flash">{{ m }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <div id="toast" class="toast" hidden></div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

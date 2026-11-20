@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Menu admin{% endblock %}
+{% macro cat_select(selected=None) %}
+<select name="category_id" required>
+  {% for c in categories %}
+  <option value="{{ c.id }}" {% if c.id == selected %}selected{% endif %}>{{ c.name }} ({{ c.station }})</option>
+  {% endfor %}
+</select>
+{% endmacro %}
+{% block content %}
+<h1>Menu</h1>
+
+<form method="post" action="{{ url_for('main.menu_add') }}" class="card menu-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <h2>Add item</h2>
+  <input name="name" placeholder="Name" maxlength="120" required>
+  <input name="description" placeholder="Description" maxlength="300">
+  <input name="price" placeholder="Price (e.g. 9.50)" inputmode="decimal" required>
+  {{ cat_select() }}
+  <button class="btn primary">Add</button>
+</form>
+
+{% for cat in categories %}
+<h2>{{ cat.name }} <span class="badge">{{ cat.station }}</span></h2>
+{% for item in cat.items %}
+<form method="post" action="{{ url_for('main.menu_edit', item_id=item.id) }}"
+      class="card menu-form {% if not item.available %}soldout{% endif %}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input name="name" value="{{ item.name }}" maxlength="120" required aria-label="Name">
+  <input name="description" value="{{ item.description }}" maxlength="300" aria-label="Description">
+  <input name="price" value="{{ '%.2f'|format(item.price / 100) }}" inputmode="decimal" required aria-label="Price">
+  {{ cat_select(item.category_id) }}
+  <button class="btn">Save</button>
+  <button class="btn {% if item.available %}danger{% else %}primary{% endif %}" formnovalidate
+          formaction="{{ url_for('main.menu_toggle', item_id=item.id) }}">
+    {% if item.available %}Mark sold out{% else %}Make available{% endif %}
+  </button>
+</form>
+{% endfor %}
+{% endfor %}
+
+<h1>Categories</h1>
+{% macro station_select(selected=None) %}
+<select name="station" required aria-label="Station">
+  <option value="kitchen" {% if selected == 'kitchen' %}selected{% endif %}>kitchen</option>
+  <option value="bar" {% if selected == 'bar' %}selected{% endif %}>bar</option>
+</select>
+{% endmacro %}
+<form method="post" action="{{ url_for('main.category_add') }}" class="card menu-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <h2>Add category</h2>
+  <input name="name" placeholder="Category name" maxlength="80" required>
+  {{ station_select() }}
+  <button class="btn primary">Add</button>
+</form>
+{% for cat in categories %}
+<form method="post" action="{{ url_for('main.category_edit', category_id=cat.id) }}" class="card menu-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input name="name" value="{{ cat.name }}" maxlength="80" required aria-label="Category name">
+  {{ station_select(cat.station) }}
+  <span class="muted">{{ cat.items|length }} item{{ '' if cat.items|length == 1 else 's' }}</span>
+  <button class="btn">Save</button>
+  <button class="btn danger" formnovalidate
+          formaction="{{ url_for('main.category_delete', category_id=cat.id) }}">Delete</button>
+</form>
+{% endfor %}
+{% endblock %}

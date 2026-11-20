@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}QR codes{% endblock %}
+{% block content %}
+<div class="page-head no-print">
+  <h1>QR codes</h1>
+  <button class="btn primary" onclick="window.print()">Print</button>
+</div>
+<p class="muted no-print">Codes point to <code>{{ base }}</code>. Set the <code>BASE_URL</code> env var to your LAN address so phones can reach it.</p>
+<div class="qr-grid">
+  {% for c in codes %}
+  <div class="qr-card">
+    <div class="qr-title">Table {{ c.number }}</div>
+    {{ c.svg }}
+    <div class="qr-sub">Scan to order</div>
+    <a class="qr-url no-print" href="{{ c.url }}">{{ c.url }}</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

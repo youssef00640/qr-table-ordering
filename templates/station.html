@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body_attrs %}data-station="{{ station }}"{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ title }}</h1>
+  <button id="sound" class="btn">🔔 Tap to enable sound</button>
+</div>
+<div id="cards" class="cards"></div>
+<p id="empty" class="muted" hidden>No open orders. New ones appear here automatically.</p>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+<script src="{{ url_for('static', filename='station.js') }}"></script>
+{% endblock %}

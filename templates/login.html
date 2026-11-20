@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Staff login{% endblock %}
+{% block nav %}{% endblock %}
+{% block content %}
+<form method="post" class="login card">
+  <h1>Staff login</h1>
+  {% if error %}<div class="flash error">{{ error }}</div>{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="next" value="{{ next }}">
+  <label for="pin">PIN</label>
+  <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="off" autofocus required>
+  <button class="btn primary">Log in</button>
+</form>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Floor{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Floor</h1>
+  <div class="legend">
+    <span class="dot free"></span>Free
+    <span class="dot ordering"></span>Ordering
+    <span class="dot waiting"></span>Waiting
+    <span class="dot ready"></span>Ready to serve
+  </div>
+</div>
+<div id="floor" class="floor"></div>
+
+<section id="detail" class="card detail" hidden>
+  <div class="page-head">
+    <h2 id="d-title"></h2>
+    <button id="d-hide" class="link">Hide</button>
+  </div>
+  <div id="d-orders"></div>
+  <div class="page-head">
+    <strong id="d-total"></strong>
+    <button id="d-close" class="btn danger">Close table</button>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+<script src="{{ url_for('static', filename='manager.js') }}"></script>
+{% endblock %}
